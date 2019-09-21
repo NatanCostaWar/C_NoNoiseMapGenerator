@@ -20,17 +20,28 @@ int main(int argc, char** argv){
 	int width= 100;
 	int height = 60;
 	
+	
+	//Mutable Variables and Configurations:
 	char WATER  = '.';
 	char GRASS = 'i';
 	char SAND = 'T';
 	char MOUNTAIN = 'M';
 	char SNOW  = 'N';
 	char SHALLOW  = 'R';
+
+	int map_borders = 8;
+	int land_percentage = 15; //max: 1000
+	int land_generation_size = 5; //max: map_borders size
+	int land_hardness = 50; //max: 100
+	int mountain_distance = 10; //min: 2, only even numbers
+	int snow_distance = 10; //min: 2, only even numbers
+
+
 	
 
     printf("map width (standard: 100) (max: 1000): \n");
     scanf("%i", &width);
-    printf("map width (standard: 100) (max: 1000): \n"); 
+    printf("map width (standard: 60) (max: 1000): \n"); 
     scanf("%i", &height);
 
 	char mapa [width][height];
@@ -46,8 +57,8 @@ int main(int argc, char** argv){
 	//Generating Initial Land Points
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			int x = rand() % 300;
-			if(x < 4 && i>5 && i<width-5 && j>5 && j<height-5){
+			int x = rand() % 1000;
+			if(x < land_percentage && i>map_borders && i<width-(map_borders+1) && j>map_borders && j<height-(map_borders+1)){
 				mapa[i][j] = '1';
 			}
 		}
@@ -58,12 +69,12 @@ int main(int argc, char** argv){
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
 			if(mapa[i][j] == '1'){
-				for(a=i-5;a<=i+5;a++){
-					for(b=j-5;b<=j+5;b++){
+				for(a=i-land_generation_size;a<=i+land_generation_size;a++){
+					for(b=j-land_generation_size;b<=j+land_generation_size;b++){
 						if(a == i && b == j){
 						}else{
 							int x = rand() % 100;
-							if(x > 50){
+							if(x < land_hardness){
 								mapa[a][b]= GRASS;
 							}	
 						}	
@@ -82,20 +93,10 @@ int main(int argc, char** argv){
 		}
 	}
 	
-	
-	//Filling Map Edges With Water
-	for(j=0;j<height;j++){
-		for(i=0;i<width;i++){
-			if(i < 3 || i>width-3 || j<3 || j>height-3){
-				mapa[i][j]=WATER;
-			}		
-		}
-	}
-	
 	//Filling with Land Water points Btween Land Points
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			//WATER ENTRE DUAS GRASSS
+			//WATER btween two GRASSS
 			if(mapa[i][j] == GRASS && mapa[i+1][j] == WATER && mapa[i+2][j] == GRASS){
 				mapa[i+1][j] = GRASS;
 			}
@@ -108,7 +109,7 @@ int main(int argc, char** argv){
 			if(mapa[i][j] == GRASS && mapa[i][j-1] == WATER && mapa[i][j-2] == GRASS){
 				mapa[i][j-1] = GRASS;
 			}
-			//DUAS WATERS ENTRE DUAS GRASSS
+			//two WATERS btween two GRASSS
 			if(mapa[i][j] == GRASS && mapa[i+1][j] == WATER && mapa[i+2][j] == WATER && mapa[i+3][j] == GRASS){
 				mapa[i+1][j] = GRASS;
 				mapa[i+2][j] = GRASS;
@@ -168,6 +169,9 @@ int main(int argc, char** argv){
 				mapa[i][j-1] = SHALLOW;
 				mapa[i][j-2] = SHALLOW;
 			}
+			if(mapa[i][j] == WATER && mapa[i+1][j+1] == SAND || mapa[i][j] == WATER && mapa[i-1][j-1] == SAND || mapa[i][j] == WATER && mapa[i+1][j-1] == SAND || mapa[i][j] == WATER && mapa[i-1][j+1] == SAND){
+				mapa[i][j] = SHALLOW;
+			}
 			
 		}
 	}
@@ -187,8 +191,8 @@ int main(int argc, char** argv){
 							start=a;
 						}
 					}else{
-						if(quant>8){
-							for(b=4;b<quant-4;b++){
+						if(quant>mountain_distance){
+							for(b=(int)mountain_distance;b<quant-((int)(mountain_distance/2));b++){
 								mapa[start+b][j] = MOUNTAIN;
 							}
 						}
@@ -231,8 +235,8 @@ int main(int argc, char** argv){
 							start=a;
 						}
 					}else{
-						if(quant>10){
-							for(b=5;b<quant-5;b++){
+						if(quant>snow_distance){
+							for(b=(int)(snow_distance/2);b<quant-((int)(snow_distance/2));b++){
 								mapa[start+b][j] = SNOW;
 							}
 						}
