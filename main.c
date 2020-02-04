@@ -10,11 +10,7 @@ int main(int argc, char** argv){
 	int j = 0;
 	int a = 0;
 	int b = 0;
-	
-	
-	//Creating Map File
-	FILE * file;
-    file = fopen("c:\\Users\\natan\\Desktop\\map.txt","w");
+	int x = 0;
 	
 	//Creating the Map
 	int width= 100;
@@ -22,22 +18,23 @@ int main(int argc, char** argv){
 	
 	
 	//Mutable Variables and Configurations:
-	char WATER  = '.';
-	char GRASS = 'i';
-	char SAND = 'T';
-	char MOUNTAIN = 'M';
-	char SNOW  = 'N';
-	char SHALLOW  = 'R';
+	#define WATER '.'
+	#define GRASS 'i'
+	#define SAND  'T'
+	#define MOUNTAIN 'M'
+	#define SNOW 'N'
+	#define SHALLOW 'R'
+
+	int generate_txt = 1;
+	int generate_image = 1;
 
 	int map_borders = 8;
 	int land_percentage = 15; //max: 1000
 	int land_generation_size = 5; //max: map_borders size
-	int land_hardness = 50; //max: 100
+	int land_hardness = 30; //max: 100
 	int mountain_distance = 10; //min: 2, only even numbers
 	int snow_distance = 10; //min: 2, only even numbers
 
-
-	
 
     printf("map width (standard: 100) (max: 1000): \n");
     scanf("%i", &width);
@@ -268,95 +265,112 @@ int main(int argc, char** argv){
 	}
 	
 	
-	//Putting The Map In Archive
-	for(j=0;j<height;j++){
-		for(i=0;i<width;i++){
-			fprintf(file, "%c",mapa[i][j]);
-		}
-		fprintf(file, "\n");
-	}
-		
-  	//Creating PPM image of map
-  	FILE * file_img;
-    file_img = fopen("c:\\Users\\natan\\Desktop\\map.ppm","w");
-	//PPM Head Config
-	fprintf (file_img, "P3\n");
-    fprintf (file_img, "%i %i\n", width, height);
-    fprintf (file_img, "255\n");
-	 
-	//Generating PPM Image
-	for(j=0;j<height;j++){
-		for(i=0;i<width;i++){
-			
-			if(mapa[i][j] == GRASS){
-				int x = rand() % 100;
-				if(x>50){
-					fprintf(file_img, "86",3);
-					fprintf(file_img, " ",1);
-					fprintf(file_img, "150",3);
-					fprintf(file_img, " ",1);
-					fprintf(file_img, "116",3);
-					fprintf(file_img, " ",1);
-				}else{
-					fprintf(file_img, "173",3);
-					fprintf(file_img, " ",1);
-					fprintf(file_img, "220",3);
-					fprintf(file_img, " ",1);
-					fprintf(file_img, "176",3);
-					fprintf(file_img, " ",1);
-				}
-			}else if(mapa[i][j] == WATER){
-				fprintf(file_img, "14",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "106",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "131",3);
-				fprintf(file_img, " ",1);
-			}else if(mapa[i][j] == SHALLOW){
-				fprintf(file_img, "179",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "228",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "207",3);
-				fprintf(file_img, " ",1);
-			}else if(mapa[i][j] == SAND){
-				fprintf(file_img, "229",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "229",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "179",3);
-				fprintf(file_img, " ",1);
-			}else if(mapa[i][j] == MOUNTAIN){
-				fprintf(file_img, "61",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "58",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "51",3);
-				fprintf(file_img, " ",1);
-			}else if(mapa[i][j] == SNOW){
-				fprintf(file_img, "207",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "207",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "207",3);
-				fprintf(file_img, " ",1);
-			}else{
-				fprintf(file_img, "230",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "226",3);
-				fprintf(file_img, " ",1);
-				fprintf(file_img, "214",3);
-				fprintf(file_img, " ",1);
+	//Creating Map File
+	if (generate_txt == 1)
+	{
+		FILE * file;
+	    file = fopen("map.txt","w");
+		for(j=0;j<height;j++){
+			for(i=0;i<width;i++){
+				fprintf(file, "%c",mapa[i][j]);
 			}
-			
+			fprintf(file, "\n");
 		}
-		fprintf(file_img, "\n",1);
+		fclose(file);
 	}
+	
+	if (generate_image == 1)
+	{
+		//Creating PPM image of map
+	  	FILE * file_img;
+	    file_img = fopen("map.ppm","w");
+		//PPM Head Config
+		fprintf (file_img, "P3\n");
+	    fprintf (file_img, "%i %i\n", width, height);
+	    fprintf (file_img, "255\n");
+		 
+		//Generating PPM Image
+		for(j=0;j<height;j++){
+			for(i=0;i<width;i++){
 
+				switch(mapa[i][j]){
+					case GRASS:
+						x = rand() % 100;
+						if(x>50){
+							fprintf(file_img, "86",3);
+							fprintf(file_img, " ",1);
+							fprintf(file_img, "150",3);
+							fprintf(file_img, " ",1);
+							fprintf(file_img, "116",3);
+							fprintf(file_img, " ",1);
+						}else{
+							fprintf(file_img, "173",3);
+							fprintf(file_img, " ",1);
+							fprintf(file_img, "220",3);
+							fprintf(file_img, " ",1);
+							fprintf(file_img, "176",3);
+							fprintf(file_img, " ",1);
+						}
+						break;
+					case WATER:
+						fprintf(file_img, "14",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "106",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "131",3);
+						fprintf(file_img, " ",1);
+						break;
+					case SHALLOW:
+						fprintf(file_img, "179",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "228",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "207",3);
+						fprintf(file_img, " ",1);
+						break;
+					case SAND:
+						fprintf(file_img, "229",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "229",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "179",3);
+						fprintf(file_img, " ",1);
+						break;
+					case MOUNTAIN:
+						fprintf(file_img, "61",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "58",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "51",3);
+						fprintf(file_img, " ",1);
+						break;
+					case SNOW:
+						fprintf(file_img, "207",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "207",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "207",3);
+						fprintf(file_img, " ",1);
+						break;
+					default:
+						fprintf(file_img, "230",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "226",3);
+						fprintf(file_img, " ",1);
+						fprintf(file_img, "214",3);
+						fprintf(file_img, " ",1);
+						break;
+				
+				}
+				
+			}
+			fprintf(file_img, "\n",1);
+		}
+		fclose(file_img);
+	}
+	
 
-
-fclose(file_img);
-fclose(file);
+  	
 
 return 0;
 }
