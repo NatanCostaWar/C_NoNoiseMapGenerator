@@ -297,68 +297,28 @@ int main(int argc, char** argv){
 					case GRASS:
 						x = rand() % 100;
 						if(x>50){
-							fprintf(file_img, "86",3);
-							fprintf(file_img, " ",1);
-							fprintf(file_img, "150",3);
-							fprintf(file_img, " ",1);
-							fprintf(file_img, "116",3);
-							fprintf(file_img, " ",1);
+							fprintf(file_img, "86 150 116 ", 12);
 						}else{
-							fprintf(file_img, "173",3);
-							fprintf(file_img, " ",1);
-							fprintf(file_img, "220",3);
-							fprintf(file_img, " ",1);
-							fprintf(file_img, "176",3);
-							fprintf(file_img, " ",1);
+							fprintf(file_img, "173 220 176 ", 12);
 						}
 						break;
 					case WATER:
-						fprintf(file_img, "14",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "106",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "131",3);
-						fprintf(file_img, " ",1);
+						fprintf(file_img, "14 106 131 ", 12);
 						break;
 					case SHALLOW:
-						fprintf(file_img, "179",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "228",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "207",3);
-						fprintf(file_img, " ",1);
+						fprintf(file_img, "179 228 207 ", 12);
 						break;
 					case SAND:
-						fprintf(file_img, "229",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "229",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "179",3);
-						fprintf(file_img, " ",1);
+						fprintf(file_img, "229 229 179 ", 12);
 						break;
 					case MOUNTAIN:
-						fprintf(file_img, "61",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "58",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "51",3);
-						fprintf(file_img, " ",1);
+						fprintf(file_img, "61 58 51 ", 12);
 						break;
 					case SNOW:
-						fprintf(file_img, "207",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "207",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "207",3);
-						fprintf(file_img, " ",1);
+						fprintf(file_img, "207 207 207 ", 12);
 						break;
 					default:
-						fprintf(file_img, "230",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "226",3);
-						fprintf(file_img, " ",1);
-						fprintf(file_img, "214",3);
-						fprintf(file_img, " ",1);
+						fprintf(file_img, "230 226 214 ", 12);
 						break;
 				
 				}
