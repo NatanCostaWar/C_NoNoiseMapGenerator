@@ -26,6 +26,7 @@ int main(int argc, char** argv){
 	#define SHALLOW 'R'
 
 	int generate_txt = 1;
+	int generate_matriz = 0;
 	int generate_image = 1;
 
 	int map_borders = 8;
@@ -41,12 +42,12 @@ int main(int argc, char** argv){
     printf("map width (standard: 60) (max: 1000): \n"); 
     scanf("%i", &height);
 
-	char mapa [width][height];
+	char buffer [width][height];
 	
 	//Filling the map with water
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			mapa[i][j] = WATER;
+			buffer[i][j] = WATER;
 		}
 	}
 	
@@ -56,7 +57,7 @@ int main(int argc, char** argv){
 		for(i=0;i<width;i++){
 			int x = rand() % 1000;
 			if(x < land_percentage && i>map_borders && i<width-(map_borders+1) && j>map_borders && j<height-(map_borders+1)){
-				mapa[i][j] = '1';
+				buffer[i][j] = '1';
 			}
 		}
 	}
@@ -65,14 +66,14 @@ int main(int argc, char** argv){
 	//Generating Lands From Initial Points
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j] == '1'){
+			if(buffer[i][j] == '1'){
 				for(a=i-land_generation_size;a<=i+land_generation_size;a++){
 					for(b=j-land_generation_size;b<=j+land_generation_size;b++){
 						if(a == i && b == j){
 						}else{
 							int x = rand() % 100;
 							if(x < land_hardness){
-								mapa[a][b]= GRASS;
+								buffer[a][b]= GRASS;
 							}	
 						}	
 					}
@@ -84,8 +85,8 @@ int main(int argc, char** argv){
 	//Removing Initial Land Points
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j] == '1'){
-				mapa[i][j]=GRASS;
+			if(buffer[i][j] == '1'){
+				buffer[i][j]=GRASS;
 			}		
 		}
 	}
@@ -94,31 +95,31 @@ int main(int argc, char** argv){
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
 			//WATER btween two GRASSS
-			if(mapa[i][j] == GRASS && mapa[i+1][j] == WATER && mapa[i+2][j] == GRASS){
-				mapa[i+1][j] = GRASS;
+			if(buffer[i][j] == GRASS && buffer[i+1][j] == WATER && buffer[i+2][j] == GRASS){
+				buffer[i+1][j] = GRASS;
 			}
-			if(mapa[i][j] == GRASS && mapa[i-1][j] == WATER && mapa[i-2][j] == GRASS){
-				mapa[i-1][j] = GRASS;
+			if(buffer[i][j] == GRASS && buffer[i-1][j] == WATER && buffer[i-2][j] == GRASS){
+				buffer[i-1][j] = GRASS;
 			}
-			if(mapa[i][j] == GRASS && mapa[i][j+1] == WATER && mapa[i][j+2] == GRASS){
-				mapa[i][j+1] = GRASS;
+			if(buffer[i][j] == GRASS && buffer[i][j+1] == WATER && buffer[i][j+2] == GRASS){
+				buffer[i][j+1] = GRASS;
 			}
-			if(mapa[i][j] == GRASS && mapa[i][j-1] == WATER && mapa[i][j-2] == GRASS){
-				mapa[i][j-1] = GRASS;
+			if(buffer[i][j] == GRASS && buffer[i][j-1] == WATER && buffer[i][j-2] == GRASS){
+				buffer[i][j-1] = GRASS;
 			}
 			//two WATERS btween two GRASSS
-			if(mapa[i][j] == GRASS && mapa[i+1][j] == WATER && mapa[i+2][j] == WATER && mapa[i+3][j] == GRASS){
-				mapa[i+1][j] = GRASS;
-				mapa[i+2][j] = GRASS;
-			}if(mapa[i][j] == GRASS && mapa[i-1][j] == WATER && mapa[i-2][j] == WATER && mapa[i-3][j] == GRASS){
-				mapa[i-1][j] = GRASS;
-				mapa[i-2][j] = GRASS;
-			}if(mapa[i][j] == GRASS && mapa[i][j+1] == WATER && mapa[i][j+2] == WATER && mapa[i][j+3] == GRASS){
-				mapa[i][j+1] = GRASS;
-				mapa[i][j+2] = GRASS;
-			}if(mapa[i][j] == GRASS && mapa[i][j-1] == WATER && mapa[i][j-2] == WATER && mapa[i][j-3] == GRASS){
-				mapa[i][j+1] = GRASS;
-				mapa[i][j+2] = GRASS;
+			if(buffer[i][j] == GRASS && buffer[i+1][j] == WATER && buffer[i+2][j] == WATER && buffer[i+3][j] == GRASS){
+				buffer[i+1][j] = GRASS;
+				buffer[i+2][j] = GRASS;
+			}if(buffer[i][j] == GRASS && buffer[i-1][j] == WATER && buffer[i-2][j] == WATER && buffer[i-3][j] == GRASS){
+				buffer[i-1][j] = GRASS;
+				buffer[i-2][j] = GRASS;
+			}if(buffer[i][j] == GRASS && buffer[i][j+1] == WATER && buffer[i][j+2] == WATER && buffer[i][j+3] == GRASS){
+				buffer[i][j+1] = GRASS;
+				buffer[i][j+2] = GRASS;
+			}if(buffer[i][j] == GRASS && buffer[i][j-1] == WATER && buffer[i][j-2] == WATER && buffer[i][j-3] == GRASS){
+				buffer[i][j+1] = GRASS;
+				buffer[i][j+2] = GRASS;
 			}
 			
 			
@@ -128,17 +129,17 @@ int main(int argc, char** argv){
 	//Generating beaches
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j] == WATER && mapa[i+1][j] == GRASS && mapa[i+2][j] == GRASS && mapa[i+3][j]==GRASS){
-				mapa[i+1][j] = SAND;
+			if(buffer[i][j] == WATER && buffer[i+1][j] == GRASS && buffer[i+2][j] == GRASS && buffer[i+3][j]==GRASS){
+				buffer[i+1][j] = SAND;
 				
-			}if(mapa[i][j] == WATER && mapa[i-1][j] == GRASS && mapa[i-2][j] == GRASS && mapa[i-3][j]==GRASS){
-				mapa[i-1][j] = SAND;
+			}if(buffer[i][j] == WATER && buffer[i-1][j] == GRASS && buffer[i-2][j] == GRASS && buffer[i-3][j]==GRASS){
+				buffer[i-1][j] = SAND;
 				
-			}if(mapa[i][j] == WATER && mapa[i][j+1] == GRASS && mapa[i][j+2] == GRASS && mapa[i][j+3]==GRASS){
-				mapa[i][j+1] = SAND;
+			}if(buffer[i][j] == WATER && buffer[i][j+1] == GRASS && buffer[i][j+2] == GRASS && buffer[i][j+3]==GRASS){
+				buffer[i][j+1] = SAND;
 				
-			}if(mapa[i][j] == WATER && mapa[i][j-1] == GRASS && mapa[i][j-2] == GRASS && mapa[i][j-3]==GRASS){
-				mapa[i][j-1] = SAND;
+			}if(buffer[i][j] == WATER && buffer[i][j-1] == GRASS && buffer[i][j-2] == GRASS && buffer[i][j-3]==GRASS){
+				buffer[i][j-1] = SAND;
 				
 			}
 				
@@ -150,24 +151,24 @@ int main(int argc, char** argv){
 	//Generating shallow
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j] == SAND && mapa[i+1][j] == WATER && mapa[i+2][j] == WATER){
-				mapa[i+1][j] = SHALLOW;
-				mapa[i+2][j] = SHALLOW;
+			if(buffer[i][j] == SAND && buffer[i+1][j] == WATER && buffer[i+2][j] == WATER){
+				buffer[i+1][j] = SHALLOW;
+				buffer[i+2][j] = SHALLOW;
 			}
-			if(mapa[i][j] == SAND && mapa[i-1][j] == WATER && mapa[i-2][j] == WATER){
-				mapa[i-1][j] = SHALLOW;
-				mapa[i-2][j] = SHALLOW;
+			if(buffer[i][j] == SAND && buffer[i-1][j] == WATER && buffer[i-2][j] == WATER){
+				buffer[i-1][j] = SHALLOW;
+				buffer[i-2][j] = SHALLOW;
 			}
-			if(mapa[i][j] == SAND && mapa[i][j+1] == WATER && mapa[i][j+2] == WATER){
-				mapa[i][j+1] = SHALLOW;
-				mapa[i][j+2] = SHALLOW;
+			if(buffer[i][j] == SAND && buffer[i][j+1] == WATER && buffer[i][j+2] == WATER){
+				buffer[i][j+1] = SHALLOW;
+				buffer[i][j+2] = SHALLOW;
 			}
-			if(mapa[i][j] == SAND && mapa[i][j-1] == WATER && mapa[i][j-2] == WATER){
-				mapa[i][j-1] = SHALLOW;
-				mapa[i][j-2] = SHALLOW;
+			if(buffer[i][j] == SAND && buffer[i][j-1] == WATER && buffer[i][j-2] == WATER){
+				buffer[i][j-1] = SHALLOW;
+				buffer[i][j-2] = SHALLOW;
 			}
-			if(mapa[i][j] == WATER && mapa[i+1][j+1] == SAND || mapa[i][j] == WATER && mapa[i-1][j-1] == SAND || mapa[i][j] == WATER && mapa[i+1][j-1] == SAND || mapa[i][j] == WATER && mapa[i-1][j+1] == SAND){
-				mapa[i][j] = SHALLOW;
+			if(buffer[i][j] == WATER && buffer[i+1][j+1] == SAND || buffer[i][j] == WATER && buffer[i-1][j-1] == SAND || buffer[i][j] == WATER && buffer[i+1][j-1] == SAND || buffer[i][j] == WATER && buffer[i-1][j+1] == SAND){
+				buffer[i][j] = SHALLOW;
 			}
 			
 		}
@@ -178,19 +179,19 @@ int main(int argc, char** argv){
 	//Generating Mountains
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j] == GRASS){
+			if(buffer[i][j] == GRASS){
 				int quant = 0;
 				int start = 0;
 				for(a=i;a<width;a++){
-					if(mapa[a][j]==GRASS){
+					if(buffer[a][j]==GRASS){
 						quant++;
-						if(mapa[a-1][j]!=GRASS){
+						if(buffer[a-1][j]!=GRASS){
 							start=a;
 						}
 					}else{
 						if(quant>mountain_distance){
 							for(b=(int)mountain_distance;b<quant-((int)(mountain_distance/2));b++){
-								mapa[start+b][j] = MOUNTAIN;
+								buffer[start+b][j] = MOUNTAIN;
 							}
 						}
 						quant=0;
@@ -203,17 +204,17 @@ int main(int argc, char** argv){
 	
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j]==SAND && mapa[i][j+1]==MOUNTAIN || mapa[i][j]==SAND && mapa[i][j+2]==MOUNTAIN || mapa[i][j]==SAND && mapa[i][j+3]==MOUNTAIN || mapa[i][j]==SAND && mapa[i][j+4]==MOUNTAIN){
-				mapa[i][j+1]=GRASS;
-				mapa[i][j+2]=GRASS;
-				mapa[i][j+3]=GRASS;
-				mapa[i][j+4]=GRASS;
+			if(buffer[i][j]==SAND && buffer[i][j+1]==MOUNTAIN || buffer[i][j]==SAND && buffer[i][j+2]==MOUNTAIN || buffer[i][j]==SAND && buffer[i][j+3]==MOUNTAIN || buffer[i][j]==SAND && buffer[i][j+4]==MOUNTAIN){
+				buffer[i][j+1]=GRASS;
+				buffer[i][j+2]=GRASS;
+				buffer[i][j+3]=GRASS;
+				buffer[i][j+4]=GRASS;
 			}
-			if(mapa[i][j]==SAND && mapa[i][j-1]==MOUNTAIN || mapa[i][j]==SAND && mapa[i][j-2]==MOUNTAIN || mapa[i][j]==SAND && mapa[i][j-3]==MOUNTAIN || mapa[i][j]==SAND && mapa[i][j-4]==MOUNTAIN){
-				mapa[i][j-1]=GRASS;
-				mapa[i][j-2]=GRASS;
-				mapa[i][j-3]=GRASS;
-				mapa[i][j-4]=GRASS;
+			if(buffer[i][j]==SAND && buffer[i][j-1]==MOUNTAIN || buffer[i][j]==SAND && buffer[i][j-2]==MOUNTAIN || buffer[i][j]==SAND && buffer[i][j-3]==MOUNTAIN || buffer[i][j]==SAND && buffer[i][j-4]==MOUNTAIN){
+				buffer[i][j-1]=GRASS;
+				buffer[i][j-2]=GRASS;
+				buffer[i][j-3]=GRASS;
+				buffer[i][j-4]=GRASS;
 			}
 		}
 	}
@@ -222,19 +223,19 @@ int main(int argc, char** argv){
 	//Generating Snow
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j] == MOUNTAIN){
+			if(buffer[i][j] == MOUNTAIN){
 				int quant=0;
 				int start=0;
 				for(a=i;a<width;a++){
-					if(mapa[a][j]==MOUNTAIN){
+					if(buffer[a][j]==MOUNTAIN){
 						quant++;
-						if(mapa[a-1][j]!=MOUNTAIN){
+						if(buffer[a-1][j]!=MOUNTAIN){
 							start=a;
 						}
 					}else{
 						if(quant>snow_distance){
 							for(b=(int)(snow_distance/2);b<quant-((int)(snow_distance/2));b++){
-								mapa[start+b][j] = SNOW;
+								buffer[start+b][j] = SNOW;
 							}
 						}
 						quant=0;
@@ -247,19 +248,19 @@ int main(int argc, char** argv){
 	
 	for(j=0;j<height;j++){
 		for(i=0;i<width;i++){
-			if(mapa[i][j]==GRASS && mapa[i][j+1]==SNOW || mapa[i][j]==GRASS && mapa[i][j+2]==SNOW || mapa[i][j]==GRASS && mapa[i][j+3]==SNOW || mapa[i][j]==GRASS && mapa[i][j+4]==SNOW || mapa[i][j]==GRASS && mapa[i][j+5]==SNOW){
-				mapa[i][j+1]=MOUNTAIN;
-				mapa[i][j+2]=MOUNTAIN;
-				mapa[i][j+3]=MOUNTAIN;
-				mapa[i][j+4]=MOUNTAIN;
-				mapa[i][j+5]=MOUNTAIN;
+			if(buffer[i][j]==GRASS && buffer[i][j+1]==SNOW || buffer[i][j]==GRASS && buffer[i][j+2]==SNOW || buffer[i][j]==GRASS && buffer[i][j+3]==SNOW || buffer[i][j]==GRASS && buffer[i][j+4]==SNOW || buffer[i][j]==GRASS && buffer[i][j+5]==SNOW){
+				buffer[i][j+1]=MOUNTAIN;
+				buffer[i][j+2]=MOUNTAIN;
+				buffer[i][j+3]=MOUNTAIN;
+				buffer[i][j+4]=MOUNTAIN;
+				buffer[i][j+5]=MOUNTAIN;
 			}
-			if(mapa[i][j]==GRASS && mapa[i][j-1]==SNOW || mapa[i][j]==GRASS && mapa[i][j-2]==SNOW || mapa[i][j]==GRASS && mapa[i][j-3]==SNOW || mapa[i][j]==GRASS && mapa[i][j-4]==SNOW || mapa[i][j]==GRASS && mapa[i][j-5]==SNOW){
-				mapa[i][j-1]=MOUNTAIN;
-				mapa[i][j-2]=MOUNTAIN;
-				mapa[i][j-3]=MOUNTAIN;
-				mapa[i][j-4]=MOUNTAIN;
-				mapa[i][j-5]=MOUNTAIN;
+			if(buffer[i][j]==GRASS && buffer[i][j-1]==SNOW || buffer[i][j]==GRASS && buffer[i][j-2]==SNOW || buffer[i][j]==GRASS && buffer[i][j-3]==SNOW || buffer[i][j]==GRASS && buffer[i][j-4]==SNOW || buffer[i][j]==GRASS && buffer[i][j-5]==SNOW){
+				buffer[i][j-1]=MOUNTAIN;
+				buffer[i][j-2]=MOUNTAIN;
+				buffer[i][j-3]=MOUNTAIN;
+				buffer[i][j-4]=MOUNTAIN;
+				buffer[i][j-5]=MOUNTAIN;
 			}
 		}
 	}
@@ -272,9 +273,35 @@ int main(int argc, char** argv){
 	    file = fopen("map.txt","w");
 		for(j=0;j<height;j++){
 			for(i=0;i<width;i++){
-				fprintf(file, "%c",mapa[i][j]);
+				fprintf(file, "%c",buffer[i][j]);
 			}
 			fprintf(file, "\n");
+		}
+		fclose(file);
+	}
+
+	if (generate_matriz == 1)
+	{
+		FILE * file;
+	    file = fopen("map_matriz.txt","w");
+	    fprintf(file, "[[");
+		for(j=0;j<height;j++){
+			for(i=0;i<width;i++){
+				fprintf(file, "'%c'",buffer[i][j]);
+				if (i<width-1)
+				{
+					fprintf(file, ",");
+				}
+			}
+			if (j<height-1)
+			{
+				fprintf(file, "],");
+				fprintf(file, "\n");
+				fprintf(file, "[");
+			}else{
+				fprintf(file, "]]");
+			}
+			
 		}
 		fclose(file);
 	}
@@ -293,7 +320,7 @@ int main(int argc, char** argv){
 		for(j=0;j<height;j++){
 			for(i=0;i<width;i++){
 
-				switch(mapa[i][j]){
+				switch(buffer[i][j]){
 					case GRASS:
 						x = rand() % 100;
 						if(x>50){
